@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-public class GetController {
+public class BoardGamesController {
 
     @Autowired
     private BoardGameRepository boardGameRepository;
@@ -24,7 +24,12 @@ public class GetController {
     }
 
     @RequestMapping("/userGames/{userId}")
-    public String getAllGames(@PathVariable Long userId){
-        return new Gson().toJson(boardGameRepository.findBoardGamesByUserId(userId));
+    public String getAllUserGames(@PathVariable String userId){
+        return new Gson().toJson(boardGameRepository.findBoardGamesByUserLogin(userId));
+    }
+
+    @RequestMapping("/saveGame/{login}")
+    public void saveGame(@PathVariable String login) {
+        System.out.println("Received value: " + login);
     }
 }

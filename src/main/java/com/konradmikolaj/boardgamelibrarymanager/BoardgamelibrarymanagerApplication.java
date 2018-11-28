@@ -1,6 +1,6 @@
 package com.konradmikolaj.boardgamelibrarymanager;
 
-import com.konradmikolaj.boardgamelibrarymanager.demo.DemoContentCreator;
+import com.konradmikolaj.boardgamelibrarymanager.services.DemoContentCreator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

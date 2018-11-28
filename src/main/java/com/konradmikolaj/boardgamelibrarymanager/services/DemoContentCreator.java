@@ -1,4 +1,4 @@
-package com.konradmikolaj.boardgamelibrarymanager.demo;
+package com.konradmikolaj.boardgamelibrarymanager.services;
 
 import com.konradmikolaj.boardgamelibrarymanager.model.BoardGame;
 import com.konradmikolaj.boardgamelibrarymanager.model.User;
@@ -27,18 +27,18 @@ public class DemoContentCreator {
     }
 
     private void createUsers() {
-        User user1 = new User(1L, "user_1","pass_1", Collections.emptyList());
-        User user2 = new User(2L, "user_2","pass_2", Collections.emptyList());
+        User user1 = new User("user_1","pass_1", Collections.emptyList());
+        User user2 = new User("user_2","pass_2", Collections.emptyList());
         userRepository.save(user1);
         userRepository.save(user2);
     }
 
     private void createBoardGames() {
-        BoardGame boardGame1 = new BoardGame(1L, 1L, "Osadnicy z Catanu", "Ekonomiczna", "Dom");
-        BoardGame boardGame2 = new BoardGame(2L, 1L, "Domek", "Lekka gra rodzinna", "user_1");
-        BoardGame boardGame3 = new BoardGame(3L, 2L, "Splendor", "Mózgożerna ekonomia", "Dom");
-        BoardGame boardGame4 = new BoardGame(4L, 2L, "Magia i Miecz", "Klasyczny losowy RPG", "user_2");
-        BoardGame boardGame5 = new BoardGame(5L, 2L, "Robinson Crusoe", "Kooperacyjna, przetrwanie", "Dom");
+        BoardGame boardGame1 = new BoardGame("user_1", "Osadnicy z Catanu", "Ekonomiczna", "Dom");
+        BoardGame boardGame2 = new BoardGame("user_1", "Domek", "Lekka gra rodzinna", "user_1");
+        BoardGame boardGame3 = new BoardGame("user_2", "Splendor", "Mózgożerna ekonomia", "Dom");
+        BoardGame boardGame4 = new BoardGame("user_2", "Magia i Miecz", "Klasyczny losowy RPG", "user_2");
+        BoardGame boardGame5 = new BoardGame("user_2", "Robinson Crusoe", "Kooperacyjna, przetrwanie", "Dom");
         boardGameRepository.save(boardGame1);
         boardGameRepository.save(boardGame2);
         boardGameRepository.save(boardGame3);

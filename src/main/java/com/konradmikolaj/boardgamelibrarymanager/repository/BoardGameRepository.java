@@ -8,5 +8,5 @@ import java.util.List;
 
 @Repository
 public interface BoardGameRepository extends JpaRepository<BoardGame, Long> {
-    public List<BoardGame> findBoardGamesByUserId(Long userId);
+    List<BoardGame> findBoardGamesByUserLogin(String userId);
 }

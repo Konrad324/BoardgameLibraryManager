@@ -14,10 +14,9 @@ import java.util.List;
 public class User {
 
     @Id
-    private Long id;
-
     private String login;
 
+    //By default - user fetched from database has encoded password, user created from request has decoded password
     private String password;
 
     @OneToMany(fetch = FetchType.LAZY)
