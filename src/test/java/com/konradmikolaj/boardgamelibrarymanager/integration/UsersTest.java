@@ -11,8 +11,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.util.Collections;
-
 import static org.hamcrest.Matchers.containsString;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -38,7 +36,7 @@ public class UsersTest {
 
     @Test
     public void createUser_checkIfExist_removeUser() throws Exception {
-        final User user = new User("new_user","password", Collections.emptyList());
+        final User user = User.of("new_user","password");
         final String EXPECTED_USERS = "[\"new_user\"]";
         final String EMPTY_EXPECTED_USERS = "[]";
 
@@ -67,7 +65,7 @@ public class UsersTest {
 
     @Test
     public void createUser_removeUser_cannotRemoveUserTwice() throws Exception {
-        final User user = new User("new_user","password", Collections.emptyList());
+        final User user = User.of("new_user","password");
 
         mockMvc.perform(post("/createUser")
                 .param("login",user.getLogin())

@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -22,5 +23,9 @@ public class User {
     @OneToMany(fetch = FetchType.LAZY)
     @JoinColumn(name = "boardgame_id")
     private List<BoardGame> boardGames;
+
+    public static User of(String login, String password) {
+        return new User(login, password, new ArrayList<>());
+    }
 
 }

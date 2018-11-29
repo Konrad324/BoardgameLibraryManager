@@ -32,4 +32,12 @@ public class BoardGame {
         this.description = description;
         this.localization = localization;
     }
+
+    public static BoardGame of(String userLogin, String title, String description, String localization) {
+        return new BoardGame(userLogin, title, description, localization);
+    }
+
+    public Boolean isNoPermission() {
+        return this instanceof NoPermissionBoardGame;
+    }
 }

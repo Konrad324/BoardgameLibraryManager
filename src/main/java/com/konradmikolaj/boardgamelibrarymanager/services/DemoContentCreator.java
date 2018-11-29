@@ -33,18 +33,18 @@ public class DemoContentCreator {
     }
 
     private void createUsers() {
-        User user1 = new User("user_1", UserService.encodePassword("pass_1"), Collections.emptyList());
-        User user2 = new User("user_2", UserService.encodePassword("pass_2"), Collections.emptyList());
+        User user1 = User.of("user_1", UserService.encodePassword("pass_1"));
+        User user2 = User.of("user_2", UserService.encodePassword("pass_2"));
         userRepository.save(user1);
         userRepository.save(user2);
     }
 
     private void createBoardGames() {
-        BoardGame boardGame1 = new BoardGame("user_1", "Osadnicy z Catanu", "Ekonomiczna", "Dom");
-        BoardGame boardGame2 = new BoardGame("user_1", "Domek", "Lekka gra rodzinna", "user_1");
-        BoardGame boardGame3 = new BoardGame("user_2", "Splendor", "Mózgożerna ekonomia", "Dom");
-        BoardGame boardGame4 = new BoardGame("user_2", "Magia i Miecz", "Klasyczny losowy RPG", "user_2");
-        BoardGame boardGame5 = new BoardGame("user_2", "Robinson Crusoe", "Kooperacyjna, przetrwanie", "Dom");
+        BoardGame boardGame1 = BoardGame.of("user_1", "Osadnicy z Catanu", "Ekonomiczna", "Dom");
+        BoardGame boardGame2 = BoardGame.of("user_1", "Domek", "Lekka gra rodzinna", "user_1");
+        BoardGame boardGame3 = BoardGame.of("user_2", "Splendor", "Mózgożerna ekonomia", "Dom");
+        BoardGame boardGame4 = BoardGame.of("user_2", "Magia i Miecz", "Klasyczny losowy RPG", "user_2");
+        BoardGame boardGame5 = BoardGame.of("user_2", "Robinson Crusoe", "Kooperacyjna, przetrwanie", "Dom");
         boardGameRepository.save(boardGame1);
         boardGameRepository.save(boardGame2);
         boardGameRepository.save(boardGame3);

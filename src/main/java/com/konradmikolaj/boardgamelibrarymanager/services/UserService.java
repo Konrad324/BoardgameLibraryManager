@@ -31,7 +31,7 @@ public class UserService {
     }
 
     public HttpStatus removeUser(User user) {
-        if (hasCorrectPassword(user)) {
+        if (hasPermissions(user)) {
             userRepository.deleteById(user.getLogin());
             return HttpStatus.OK;
         } else {
@@ -45,7 +45,7 @@ public class UserService {
                 .collect(Collectors.toList());
     }
 
-    private boolean hasCorrectPassword(User user) {
+    public boolean hasPermissions(User user) {
         if (isExistingUser(user)) {
             String pass64 = encodePassword(user.getPassword());
             User userFromDb = userRepository.findByLogin(user.getLogin());
