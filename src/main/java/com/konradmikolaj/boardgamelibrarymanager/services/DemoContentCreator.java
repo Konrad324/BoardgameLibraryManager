@@ -22,13 +22,19 @@ public class DemoContentCreator {
     }
 
     public void prepare() {
+        cleanDatabase();
         createUsers();
         createBoardGames();
     }
 
+    public void cleanDatabase() {
+        userRepository.deleteAll();
+        boardGameRepository.deleteAll();
+    }
+
     private void createUsers() {
-        User user1 = new User("user_1","pass_1", Collections.emptyList());
-        User user2 = new User("user_2","pass_2", Collections.emptyList());
+        User user1 = new User("user_1", UserService.encodePassword("pass_1"), Collections.emptyList());
+        User user2 = new User("user_2", UserService.encodePassword("pass_2"), Collections.emptyList());
         userRepository.save(user1);
         userRepository.save(user2);
     }

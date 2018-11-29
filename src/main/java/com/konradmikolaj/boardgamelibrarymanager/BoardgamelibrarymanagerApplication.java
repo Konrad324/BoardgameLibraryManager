@@ -10,7 +10,7 @@ public class BoardgamelibrarymanagerApplication {
 
     @Autowired
     public BoardgamelibrarymanagerApplication(DemoContentCreator demoContentCreator) {
-        demoContentCreator.prepare();
+        //demoContentCreator.prepare();
     }
 
     public static void main(String[] args) {

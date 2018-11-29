@@ -58,7 +58,7 @@ public class UserService {
         return userRepository.existsById(user.getLogin());
     }
 
-    private String encodePassword(String password) {
+    public static String encodePassword(String password) {
         return Base64.getEncoder().encodeToString(password.getBytes());
     }
 }

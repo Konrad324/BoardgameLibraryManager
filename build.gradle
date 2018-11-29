@@ -28,8 +28,11 @@ dependencies {
     implementation('org.springframework.boot:spring-boot-starter-data-rest')
     implementation('org.springframework.boot:spring-boot-starter-web')
     implementation('org.springframework.boot:spring-boot-starter-data-jpa')
-    // https://mvnrepository.com/artifact/com.google.code.gson/gson
+    
     compile group: 'com.google.code.gson', name: 'gson', version: '2.8.5'
+    compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.8.1'
+    compile group: 'com.google.guava', name: 'guava', version: '27.0-jre'
+
     runtimeOnly('com.h2database:h2')
     runtimeOnly('mysql:mysql-connector-java')
     compileOnly('org.projectlombok:lombok')
