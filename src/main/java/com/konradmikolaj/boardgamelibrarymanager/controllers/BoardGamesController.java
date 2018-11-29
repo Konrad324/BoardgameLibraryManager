@@ -1,35 +1,60 @@
 package com.konradmikolaj.boardgamelibrarymanager.controllers;
 
 import com.google.gson.Gson;
-import com.konradmikolaj.boardgamelibrarymanager.repository.BoardGameRepository;
+import com.konradmikolaj.boardgamelibrarymanager.model.BoardGame;
+import com.konradmikolaj.boardgamelibrarymanager.model.User;
+import com.konradmikolaj.boardgamelibrarymanager.services.BoardGameService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class BoardGamesController {
 
+    private final BoardGameService boardGameService;
+
     @Autowired
-    private BoardGameRepository boardGameRepository;
-
-    @RequestMapping("/test")
-    public String getTest(){
-        return "test";
+    public BoardGamesController(BoardGameService boardGameService) {
+        this.boardGameService = boardGameService;
     }
 
-    @RequestMapping("/allGames")
-    public String getAllGames(){
-        return new Gson().toJson(boardGameRepository.findAll());
+    @RequestMapping("/saveGame")
+    public ResponseEntity saveGame(@RequestParam(value = "login") String login,
+                                   @RequestParam(value = "pass") String pass,
+                                   @RequestParam(value = "title") String title,
+                                   @RequestParam(value = "description") String description,
+                                   @RequestParam(value = "localization") String localization){
+        return new ResponseEntity(boardGameService.createBoardGame(
+                User.of(login, pass),
+                BoardGame.of(login, title, description, localization)));
     }
 
-    @RequestMapping("/userGames/{userId}")
-    public String getAllUserGames(@PathVariable String userId){
-        return new Gson().toJson(boardGameRepository.findBoardGamesByUserLogin(userId));
+    @RequestMapping("/updateGame")
+    public ResponseEntity updateGame(@RequestParam(value = "login") String login,
+                                     @RequestParam(value = "pass") String pass,
+                                     @RequestParam(value = "id") Long id,
+                                     @RequestParam(value = "title") String title,
+                                     @RequestParam(value = "description") String description,
+                                     @RequestParam(value = "localization") String localization){
+        return new ResponseEntity(boardGameService.updateBoardGame(
+                User.of(login, pass),
+                BoardGame.of(id, login, title, description, localization)));
     }
 
-    @RequestMapping("/saveGame/{login}")
-    public void saveGame(@PathVariable String login) {
-        System.out.println("Received value: " + login);
+    @RequestMapping("/removeGame")
+    public ResponseEntity removeGame(@RequestParam(value = "login") String login,
+                                     @RequestParam(value = "pass") String pass,
+                                     @RequestParam(value = "id") Long id){
+        return new ResponseEntity(boardGameService.removeBoardGame(
+                User.of(login, pass),
+                BoardGame.of(id, login)));
+    }
+
+    @RequestMapping("/userGames")
+    public String getAllUserGames(@RequestParam(value = "login") String login,
+                                  @RequestParam(value = "pass") String pass){
+        return new Gson().toJson(boardGameService.getBoardGames(User.of(login, pass)));
     }
 }

@@ -1,5 +1,7 @@
 package com.konradmikolaj.boardgamelibrarymanager.model;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -11,7 +13,9 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "boardgame")
 @Data
+@Builder
 @NoArgsConstructor
+@AllArgsConstructor
 public class BoardGame {
 
     @Id
@@ -26,15 +30,16 @@ public class BoardGame {
 
     private String localization;
 
-    public BoardGame(String userLogin, String title, String description, String localization) {
-        this.userLogin = userLogin;
-        this.title = title;
-        this.description = description;
-        this.localization = localization;
+    public static BoardGame of(Long id, String userLogin) {
+        return BoardGame.builder().id(id).userLogin(userLogin).build();
     }
 
     public static BoardGame of(String userLogin, String title, String description, String localization) {
-        return new BoardGame(userLogin, title, description, localization);
+        return BoardGame.builder().userLogin(userLogin).title(title).description(description).localization(localization).build();
+    }
+
+    public static BoardGame of(Long id, String userLogin, String title, String description, String localization) {
+        return BoardGame.builder().id(id).userLogin(userLogin).title(title).description(description).localization(localization).build();
     }
 
     public Boolean isNoPermission() {
