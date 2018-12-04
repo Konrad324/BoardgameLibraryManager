@@ -36,6 +36,13 @@ public class UserController {
         return new ResponseEntity(userService.removeUser(user));
     }
 
+    @RequestMapping("/checkPermission")
+    public ResponseEntity checkPermission(@RequestParam(value = "login") String login, @RequestParam(value = "pass") String pass) {
+        User user = new User(login, pass, Collections.emptyList());
+        HttpStatus status = userService.hasPermissions(user) ? HttpStatus.OK : HttpStatus.FORBIDDEN;
+        return new ResponseEntity(status);
+    }
+
     @RequestMapping("/getAllUsers")
     public String getAllUsers(){
         return new Gson().toJson(userService.getAllUsers());

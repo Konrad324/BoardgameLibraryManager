@@ -42,7 +42,4 @@ public class BoardGame {
         return BoardGame.builder().id(id).userLogin(userLogin).title(title).description(description).localization(localization).build();
     }
 
-    public Boolean isNoPermission() {
-        return this instanceof NoPermissionBoardGame;
-    }
 }

@@ -37,6 +37,28 @@ public class UserControllerTest {
     }
 
     @Test
+    public void checkPermissions_correctUser() throws Exception {
+        final User user = User.of("user_1","pass_1");
+
+        mockMvc.perform(post("/checkPermission")
+                .param("login", user.getLogin())
+                .param("pass", user.getPassword()))
+                .andDo(print())
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    public void checkPermissions_incorrectUser() throws Exception {
+        final User user = User.of("user_1","wrong_password");
+
+        mockMvc.perform(post("/checkPermission")
+                .param("login", user.getLogin())
+                .param("pass", user.getPassword()))
+                .andDo(print())
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
     public void createUser_newUser() throws Exception {
         final User user = User.of("new_user","password");
 

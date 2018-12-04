@@ -46,6 +46,12 @@ public class UsersTest {
                 .andDo(print())
                 .andExpect(status().isOk());
 
+        mockMvc.perform(get("/checkPermission")
+                .param("login", user.getLogin())
+                .param("pass", user.getPassword()))
+                .andDo(print())
+                .andExpect(status().isOk());
+
         mockMvc.perform(get("/getAllUsers"))
                 .andDo(print())
                 .andExpect(status().isOk())
@@ -78,6 +84,12 @@ public class UsersTest {
                 .param("pass", user.getPassword()))
                 .andDo(print())
                 .andExpect(status().isOk());
+
+        mockMvc.perform(get("/checkPermission")
+                .param("login", user.getLogin())
+                .param("pass", user.getPassword()))
+                .andDo(print())
+                .andExpect(status().isForbidden());
 
         mockMvc.perform(post("/removeUser")
                 .param("login",user.getLogin())
