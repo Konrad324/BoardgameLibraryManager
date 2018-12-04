@@ -40,7 +40,7 @@ public class UserControllerTest {
     public void checkPermissions_correctUser() throws Exception {
         final User user = User.of("user_1","pass_1");
 
-        mockMvc.perform(post("/checkPermission")
+        mockMvc.perform(get("/checkPermission")
                 .param("login", user.getLogin())
                 .param("pass", user.getPassword()))
                 .andDo(print())
@@ -51,7 +51,7 @@ public class UserControllerTest {
     public void checkPermissions_incorrectUser() throws Exception {
         final User user = User.of("user_1","wrong_password");
 
-        mockMvc.perform(post("/checkPermission")
+        mockMvc.perform(get("/checkPermission")
                 .param("login", user.getLogin())
                 .param("pass", user.getPassword()))
                 .andDo(print())

@@ -1,5 +1,6 @@
 package com.konradmikolaj.boardgamelibrarymanager.model;
 
+import com.google.gson.Gson;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -41,5 +42,4 @@ public class BoardGame {
     public static BoardGame of(Long id, String userLogin, String title, String description, String localization) {
         return BoardGame.builder().id(id).userLogin(userLogin).title(title).description(description).localization(localization).build();
     }
-
 }

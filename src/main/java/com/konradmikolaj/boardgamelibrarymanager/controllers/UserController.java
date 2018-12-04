@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -24,26 +25,26 @@ public class UserController {
         this.userService = userService;
     }
 
-    @RequestMapping("/createUser")
+    @RequestMapping(value = "/createUser", method = RequestMethod.POST)
     public ResponseEntity createUser(@RequestParam(value = "login") String login, @RequestParam(value = "pass") String pass) {
         User user = new User(login, pass, Collections.emptyList());
         return new ResponseEntity(userService.createUser(user));
     }
 
-    @RequestMapping("/removeUser")
+    @RequestMapping(value = "/removeUser", method = RequestMethod.POST)
     public ResponseEntity removeUser(@RequestParam(value = "login") String login, @RequestParam(value = "pass") String pass) {
         User user = new User(login, pass, Collections.emptyList());
         return new ResponseEntity(userService.removeUser(user));
     }
 
-    @RequestMapping("/checkPermission")
+    @RequestMapping(value = "/checkPermission", method = RequestMethod.GET)
     public ResponseEntity checkPermission(@RequestParam(value = "login") String login, @RequestParam(value = "pass") String pass) {
         User user = new User(login, pass, Collections.emptyList());
         HttpStatus status = userService.hasPermissions(user) ? HttpStatus.OK : HttpStatus.FORBIDDEN;
         return new ResponseEntity(status);
     }
 
-    @RequestMapping("/getAllUsers")
+    @RequestMapping(value = "/getAllUsers", method = RequestMethod.GET)
     public String getAllUsers(){
         return new Gson().toJson(userService.getAllUsers());
     }
