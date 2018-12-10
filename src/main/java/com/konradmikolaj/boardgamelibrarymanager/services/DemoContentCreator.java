@@ -7,7 +7,6 @@ import com.konradmikolaj.boardgamelibrarymanager.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
 
 @Service
 public class DemoContentCreator {
@@ -35,8 +34,10 @@ public class DemoContentCreator {
     private void createUsers() {
         User user1 = User.of("user_1", UserService.encodePassword("pass_1"));
         User user2 = User.of("user_2", UserService.encodePassword("pass_2"));
+        User user3 = User.of("user_3", UserService.encodePassword("pass_3"));
         userRepository.save(user1);
         userRepository.save(user2);
+        userRepository.save(user3);
     }
 
     private void createBoardGames() {

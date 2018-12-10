@@ -10,7 +10,7 @@ import java.util.List;
 public interface BoardGameRepository extends JpaRepository<BoardGame, Long> {
     List<BoardGame> findBoardGamesByUserLogin(String userId);
 
-    Boolean existsBoardGameById(Long id);
+    Boolean existsBoardGameByUserLoginAndTitle(String login, String title);
 
-    BoardGame getBoardGameById(Long id);
+    BoardGame getBoardGameByUserLoginAndTitle(String login, String title);
 }

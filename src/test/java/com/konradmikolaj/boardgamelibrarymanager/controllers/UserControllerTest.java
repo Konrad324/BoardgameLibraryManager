@@ -82,7 +82,7 @@ public class UserControllerTest {
 
     @Test
     public void removeUser_correctCredentials() throws Exception {
-        final User user = User.of("user_1","pass_1");
+        final User user = User.of("user_3","pass_3");
 
         mockMvc.perform(post("/removeUser")
                 .param("login", user.getLogin())
@@ -115,7 +115,7 @@ public class UserControllerTest {
 
     @Test
     public void getAllUsers() throws Exception {
-        final String EXPECTED_USERS = "[\"user_1\",\"user_2\"]";
+        final String EXPECTED_USERS = "[\"user_1\",\"user_2\",\"user_3\"]";
 
         mockMvc.perform(get("/getAllUsers"))
                 .andDo(print())

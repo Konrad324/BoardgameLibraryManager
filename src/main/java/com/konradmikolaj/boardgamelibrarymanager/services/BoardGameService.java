@@ -24,7 +24,7 @@ public class BoardGameService {
     }
 
     public HttpStatus createBoardGame(User user, BoardGame boardGame) {
-        if (hasPermissions(user) && !isExistingBoardGame(boardGame)) {
+        if (hasPermissions(user) && !boardGame.isBroken() && !isExistingBoardGame(boardGame)) {
             boardGameRepository.save(boardGame);
             return HttpStatus.OK;
         } else {
@@ -33,7 +33,7 @@ public class BoardGameService {
     }
 
     public HttpStatus removeBoardGame(User user, BoardGame boardGame) {
-        if (hasPermissions(user)) {
+        if (hasPermissions(user) && !boardGame.isBroken()) {
             if (isExistingBoardGame(boardGame)) {
                 boardGameRepository.delete(boardGame);
                 return HttpStatus.OK;
@@ -45,9 +45,12 @@ public class BoardGameService {
     }
 
     public HttpStatus updateBoardGame(User user, BoardGame boardGame) {
-        if (hasPermissions(user)) {
+        if (hasPermissions(user) && !boardGame.isBroken()) {
             if (isExistingBoardGame(boardGame)) {
-                BoardGame boardGameToUpdate = boardGameRepository.getBoardGameById(boardGame.getId());
+                BoardGame boardGameToUpdate =
+                        boardGameRepository.getBoardGameByUserLoginAndTitle(
+                                boardGame.getUserLogin(),
+                                boardGame.getTitle());
                 boardGameToUpdate.setTitle(boardGame.getTitle());
                 boardGameToUpdate.setDescription(boardGame.getDescription());
                 boardGameToUpdate.setLocalization(boardGame.getLocalization());
@@ -69,7 +72,8 @@ public class BoardGameService {
     }
 
     private boolean isExistingBoardGame(BoardGame boardGame) {
-        return boardGameRepository.existsBoardGameById(boardGame.getId());
+        return boardGameRepository.existsBoardGameByUserLoginAndTitle(
+                boardGame.getUserLogin(), boardGame.getTitle());
     }
 
     private boolean hasPermissions(User user) {

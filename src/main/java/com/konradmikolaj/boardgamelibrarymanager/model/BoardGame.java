@@ -1,10 +1,6 @@
 package com.konradmikolaj.boardgamelibrarymanager.model;
 
-import com.google.gson.Gson;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -23,23 +19,24 @@ public class BoardGame {
     @GeneratedValue
     private Long id;
 
+    @NonNull
     private String userLogin;
 
+    //Cannot be modified, if there is need to change title, then game should be removed and add one more time
+    @NonNull
     private String title;
 
     private String description;
 
     private String localization;
 
-    public static BoardGame of(Long id, String userLogin) {
-        return BoardGame.builder().id(id).userLogin(userLogin).build();
-    }
 
     public static BoardGame of(String userLogin, String title, String description, String localization) {
         return BoardGame.builder().userLogin(userLogin).title(title).description(description).localization(localization).build();
     }
 
-    public static BoardGame of(Long id, String userLogin, String title, String description, String localization) {
-        return BoardGame.builder().id(id).userLogin(userLogin).title(title).description(description).localization(localization).build();
+    public boolean isBroken() {
+        return this instanceof BrokenBoardGame;
     }
+
 }
