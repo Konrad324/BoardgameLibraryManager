@@ -1,6 +1,5 @@
 package com.konradmikolaj.boardgamelibrarymanager.controllers;
 
-import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.konradmikolaj.boardgamelibrarymanager.model.BoardGame;
@@ -10,6 +9,7 @@ import com.konradmikolaj.boardgamelibrarymanager.services.BoardGameService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
@@ -17,6 +17,7 @@ import java.util.Optional;
 
 @Slf4j
 @RestController
+@Transactional
 public class BoardGamesController {
 
     private final BoardGameService boardGameService;

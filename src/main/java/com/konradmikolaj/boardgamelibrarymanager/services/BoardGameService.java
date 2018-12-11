@@ -35,7 +35,9 @@ public class BoardGameService {
     public HttpStatus removeBoardGame(User user, BoardGame boardGame) {
         if (hasPermissions(user) && !boardGame.isBroken()) {
             if (isExistingBoardGame(boardGame)) {
-                boardGameRepository.delete(boardGame);
+                boardGameRepository.deleteBoardGameByUserLoginAndTitle(
+                        boardGame.getUserLogin(),
+                        boardGame.getTitle());
                 return HttpStatus.OK;
             } else {
                 return HttpStatus.NOT_FOUND;

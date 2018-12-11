@@ -1,6 +1,7 @@
 package com.konradmikolaj.boardgamelibrarymanager.services;
 
 import com.konradmikolaj.boardgamelibrarymanager.model.User;
+import com.konradmikolaj.boardgamelibrarymanager.repository.BoardGameRepository;
 import com.konradmikolaj.boardgamelibrarymanager.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -15,9 +16,12 @@ public class UserService {
 
     private final UserRepository userRepository;
 
+    private final BoardGameRepository boardGameRepository;
+
     @Autowired
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository, BoardGameRepository boardGameRepository) {
         this.userRepository = userRepository;
+        this.boardGameRepository = boardGameRepository;
     }
 
     public HttpStatus createUser(User user) {
@@ -32,6 +36,7 @@ public class UserService {
 
     public HttpStatus removeUser(User user) {
         if (hasPermissions(user)) {
+            boardGameRepository.deleteBoardGamesByUserLogin(user.getLogin());
             userRepository.deleteById(user.getLogin());
             return HttpStatus.OK;
         } else {

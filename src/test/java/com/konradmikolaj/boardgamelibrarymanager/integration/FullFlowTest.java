@@ -11,7 +11,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
-import static org.hamcrest.Matchers.containsString;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -21,7 +20,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @AutoConfigureMockMvc
-public class UsersTest {
+public class FullFlowTest {
+
+    private final static User user = User.of("new_user","password");
+    private final static String EMPTY_JSON_ARRAY = "[]";
+    private final static String CREATE_GAME = "{\"title\":\"Splendor\",\"description\":\"Mózgożerna ekonomia update\",\"localization\":\"Składzik\"}";
+    private final static String UPDATE_GAME = "{\"title\":\"Splendor\",\"description\":\"Gra ekonomiczno-strategiczna\",\"localization\":\"Schowek na miotły\"}";
+    private final static String REMOVE_GAME = "{\"title\":\"Splendor\"}";
 
     @Autowired
     private MockMvc mockMvc;
@@ -34,44 +39,12 @@ public class UsersTest {
         demoContentCreator.cleanDatabase();
     }
 
-    @Test
-    public void createUser_checkIfExist_removeUser() throws Exception {
-        final User user = User.of("new_user","password");
-        final String EXPECTED_USERS = "[\"new_user\"]";
-        final String EMPTY_EXPECTED_USERS = "[]";
-
-        mockMvc.perform(post("/createUser")
-                .param("login",user.getLogin())
-                .param("pass", user.getPassword()))
-                .andDo(print())
-                .andExpect(status().isOk());
-
-        mockMvc.perform(get("/checkPermission")
-                .param("login", user.getLogin())
-                .param("pass", user.getPassword()))
-                .andDo(print())
-                .andExpect(status().isOk());
-
-        mockMvc.perform(get("/getAllUsers"))
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(content().string(containsString(EXPECTED_USERS)));
-
-        mockMvc.perform(post("/removeUser")
-                .param("login",user.getLogin())
-                .param("pass", user.getPassword()))
-                .andDo(print())
-                .andExpect(status().isOk());
-
-        mockMvc.perform(get("/getAllUsers"))
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(content().string(containsString(EMPTY_EXPECTED_USERS)));
+    private static String wrapToJsonArray(String ... objects){
+        return "[" + String.join(",", objects) + "]";
     }
 
     @Test
-    public void createUser_removeUser_cannotRemoveUserTwice() throws Exception {
-        final User user = User.of("new_user","password");
+    public void createUser_checkZeroGames_addGame_checkIfAdded_UpdateGame_checkIfUpdated_removeGame_checkIfRemoved_removeUser_checkIfRemoved() throws Exception {
 
         mockMvc.perform(post("/createUser")
                 .param("login",user.getLogin())
@@ -79,23 +52,65 @@ public class UsersTest {
                 .andDo(print())
                 .andExpect(status().isOk());
 
+        mockMvc.perform(get("/userGames")
+                .param("login",user.getLogin())
+                .param("pass", user.getPassword()))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().json(EMPTY_JSON_ARRAY));
+
+        mockMvc.perform(post("/saveGame")
+                .param("login",user.getLogin())
+                .param("pass", user.getPassword())
+                .content(CREATE_GAME))
+                .andDo(print())
+                .andExpect(status().isOk());
+
+        mockMvc.perform(get("/userGames")
+                .param("login",user.getLogin())
+                .param("pass", user.getPassword()))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().json(wrapToJsonArray(CREATE_GAME)));
+
+        mockMvc.perform(post("/updateGame")
+                .param("login",user.getLogin())
+                .param("pass", user.getPassword())
+                .content(UPDATE_GAME))
+                .andDo(print())
+                .andExpect(status().isOk());
+
+        mockMvc.perform(get("/userGames")
+                .param("login",user.getLogin())
+                .param("pass", user.getPassword()))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().json(wrapToJsonArray(UPDATE_GAME)));
+
+        mockMvc.perform(post("/removeGame")
+                .param("login",user.getLogin())
+                .param("pass", user.getPassword())
+                .content(REMOVE_GAME))
+                .andDo(print())
+                .andExpect(status().isOk());
+
+        mockMvc.perform(get("/userGames")
+                .param("login",user.getLogin())
+                .param("pass", user.getPassword()))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().json(EMPTY_JSON_ARRAY));
+
         mockMvc.perform(post("/removeUser")
                 .param("login",user.getLogin())
                 .param("pass", user.getPassword()))
                 .andDo(print())
                 .andExpect(status().isOk());
 
-        mockMvc.perform(get("/checkPermission")
-                .param("login", user.getLogin())
-                .param("pass", user.getPassword()))
+        mockMvc.perform(get("/getAllUsers"))
                 .andDo(print())
-                .andExpect(status().isForbidden());
-
-        mockMvc.perform(post("/removeUser")
-                .param("login",user.getLogin())
-                .param("pass", user.getPassword()))
-                .andDo(print())
-                .andExpect(status().isForbidden());
+                .andExpect(status().isOk())
+                .andExpect(content().json(EMPTY_JSON_ARRAY));
     }
 
 }

@@ -22,7 +22,6 @@ public class BoardGame {
     @NonNull
     private String userLogin;
 
-    //Cannot be modified, if there is need to change title, then game should be removed and add one more time
     @NonNull
     private String title;
 

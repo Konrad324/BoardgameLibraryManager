@@ -1,4 +1,4 @@
-package com.konradmikolaj.boardgamelibrarymanager.controllers;
+package com.konradmikolaj.boardgamelibrarymanager.integration;
 
 import com.konradmikolaj.boardgamelibrarymanager.model.User;
 import com.konradmikolaj.boardgamelibrarymanager.services.DemoContentCreator;
@@ -11,10 +11,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
-import static com.konradmikolaj.boardgamelibrarymanager.services.DemoContentCreator.USER_1;
-import static com.konradmikolaj.boardgamelibrarymanager.services.DemoContentCreator.USER_3;
-import static com.konradmikolaj.boardgamelibrarymanager.services.DemoContentCreator.PASS_1;
-import static com.konradmikolaj.boardgamelibrarymanager.services.DemoContentCreator.PASS_3;
 import static org.hamcrest.Matchers.containsString;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -22,12 +18,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @AutoConfigureMockMvc
-public class UserControllerTest {
-
+public class UsersScenarioTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -37,93 +31,71 @@ public class UserControllerTest {
 
     @Before
     public void setUp() throws Exception {
-        demoContentCreator.prepare();
+        demoContentCreator.cleanDatabase();
     }
 
     @Test
-    public void checkPermissions_correctUser() throws Exception {
-        final User user = User.of(USER_1, PASS_1);
-
-        mockMvc.perform(get("/checkPermission")
-                .param("login", user.getLogin())
-                .param("pass", user.getPassword()))
-                .andDo(print())
-                .andExpect(status().isOk());
-    }
-
-    @Test
-    public void checkPermissions_incorrectUser() throws Exception {
-        final User user = User.of(USER_1,"wrong_password");
-
-        mockMvc.perform(get("/checkPermission")
-                .param("login", user.getLogin())
-                .param("pass", user.getPassword()))
-                .andDo(print())
-                .andExpect(status().isForbidden());
-    }
-
-    @Test
-    public void createUser_newUser() throws Exception {
+    public void createUser_checkIfExist_removeUser() throws Exception {
         final User user = User.of("new_user","password");
+        final String EXPECTED_USERS = "[\"new_user\"]";
+        final String EMPTY_EXPECTED_USERS = "[]";
 
         mockMvc.perform(post("/createUser")
+                .param("login",user.getLogin())
+                .param("pass", user.getPassword()))
+                .andDo(print())
+                .andExpect(status().isOk());
+
+        mockMvc.perform(get("/checkPermission")
                 .param("login", user.getLogin())
                 .param("pass", user.getPassword()))
                 .andDo(print())
                 .andExpect(status().isOk());
-    }
-
-    @Test
-    public void createUser_existingUserLogin() throws Exception {
-        final User user = User.of(USER_1,"password");
-
-        mockMvc.perform(post("/createUser")
-                .param("login", user.getLogin())
-                .param("pass", user.getPassword()))
-                .andDo(print())
-                .andExpect(status().isForbidden());
-    }
-
-    @Test
-    public void removeUser_correctCredentials() throws Exception {
-        final User user = User.of(USER_3, PASS_3);
-
-        mockMvc.perform(post("/removeUser")
-                .param("login", user.getLogin())
-                .param("pass", user.getPassword()))
-                .andDo(print())
-                .andExpect(status().isOk());
-    }
-
-    @Test
-    public void removeUser_userNotExist() throws Exception {
-        final User user = User.of("user_non_existing", PASS_1);
-
-        mockMvc.perform(post("/removeUser")
-                .param("login", user.getLogin())
-                .param("pass", user.getPassword()))
-                .andDo(print())
-                .andExpect(status().isForbidden());
-    }
-
-    @Test
-    public void removeUser_incorrectCredentials() throws Exception {
-        final User user = User.of(USER_1,"wrong_password");
-
-        mockMvc.perform(post("/removeUser")
-                .param("login", user.getLogin())
-                .param("pass", user.getPassword()))
-                .andDo(print())
-                .andExpect(status().isForbidden());
-    }
-
-    @Test
-    public void getAllUsers() throws Exception {
-        final String EXPECTED_USERS = "[\"user_1\",\"user_2\",\"user_3\"]";
 
         mockMvc.perform(get("/getAllUsers"))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString(EXPECTED_USERS)));
+
+        mockMvc.perform(post("/removeUser")
+                .param("login",user.getLogin())
+                .param("pass", user.getPassword()))
+                .andDo(print())
+                .andExpect(status().isOk());
+
+        mockMvc.perform(get("/getAllUsers"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString(EMPTY_EXPECTED_USERS)));
     }
+
+    @Test
+    public void createUser_removeUser_cannotRemoveUserTwice() throws Exception {
+        final User user = User.of("new_user","password");
+
+        mockMvc.perform(post("/createUser")
+                .param("login",user.getLogin())
+                .param("pass", user.getPassword()))
+                .andDo(print())
+                .andExpect(status().isOk());
+
+        mockMvc.perform(post("/removeUser")
+                .param("login",user.getLogin())
+                .param("pass", user.getPassword()))
+                .andDo(print())
+                .andExpect(status().isOk());
+
+        mockMvc.perform(get("/checkPermission")
+                .param("login", user.getLogin())
+                .param("pass", user.getPassword()))
+                .andDo(print())
+                .andExpect(status().isForbidden());
+
+        mockMvc.perform(post("/removeUser")
+                .param("login",user.getLogin())
+                .param("pass", user.getPassword()))
+                .andDo(print())
+                .andExpect(status().isForbidden());
+    }
+
 }

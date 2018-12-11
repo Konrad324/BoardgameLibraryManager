@@ -13,4 +13,8 @@ public interface BoardGameRepository extends JpaRepository<BoardGame, Long> {
     Boolean existsBoardGameByUserLoginAndTitle(String login, String title);
 
     BoardGame getBoardGameByUserLoginAndTitle(String login, String title);
+
+    void deleteBoardGamesByUserLogin(String login);
+
+    void deleteBoardGameByUserLoginAndTitle(String login, String title);
 }
